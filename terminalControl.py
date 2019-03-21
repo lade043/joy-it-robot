@@ -7,6 +7,8 @@ import csv
 
 pwm = Adafruit_PCA9685.PCA9685(address=0x41)
 
+
+# the values for all the servos (are different for each robot)
 geometry = {
         "servo0min": 0.5,
         "servo0max": 2.5,
@@ -24,6 +26,7 @@ geometry = {
         "servo4max": 2.5,
         "servo4mid": 1.5
     }
+# the length of the arms (same for each joy it robot)
 arms = {
     0: 0.84,
     1: 10.26,
@@ -34,6 +37,11 @@ arms = {
 
 
 def summe(i):
+    """
+    Returns the sum of a list
+    :param i: list with float, int
+    :return: int sum
+    """
     r = 0
     for element in i:
         r += element
@@ -41,6 +49,12 @@ def summe(i):
 
 
 def set_servo_pulse(channel, pulse):
+    """
+    Sending the position to the servos
+    :param channel: servo number
+    :param pulse: position in ms
+    :return:
+    """
     pulse_length = 1000000
     pulse_length /= 50
     pulse_length /= 4096
@@ -55,6 +69,12 @@ pwm.set_pwm_freq(50)
 
 
 def get_pos(anglesdeg):
+    """
+    Calculates the position of the claw relative to the center of the baseplate
+    Further details in documentation
+    :param anglesdeg: dict with the servo number and position in degree (deg)
+    :return: list: [x, y, z] in cm from the center of the baseplate of the robot
+    """
     factor = math.pi / 180
     angles = anglesdeg.copy()
     for i in angles:
@@ -82,6 +102,11 @@ def get_pos(anglesdeg):
 
 
 def get_angles(ms):
+    """
+    Calculates the theoretical angles relative to a vertical position based on the ms values for each of the servos
+    :param ms: dict with the servo number and ms
+    :return: dict with the servo number and position in degree (deg)
+    """
     angles = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0}
     for servo in angles:
         if ms[servo]:
@@ -99,6 +124,12 @@ def get_angles(ms):
 
 
 def get_ms(servo, angle):
+    """
+    Calculates the ms value based on the given angle (deg)
+    :param servo: servo number
+    :param angle: angle in degree based of the vertical position
+    :return: ms value for the servo
+    """
     minimum = "servo" + str(servo) + "min"
     maximum = "servo" + str(servo) + "max"
     middle = "servo" + str(servo) + "mid"
@@ -121,7 +152,11 @@ def get_ms(servo, angle):
 
 def read_argv():
     """
-    :param TerminalParameter: style: python3 terminalControl.py -servo x -pos y
+    Reades and processes the start arguments. The main core of the program
+    :param sys.argv: styles:    python3 terminalControl.py -servo x -pos y(ms)
+                                python3 terminalControl.py -list servo,pos(ms) servo,pos(ms)
+                                python3 terminalControl.py -angle servo,angle servo,angle
+                                python3 terminalControl.py -csv file
     :return:
     """
     if sys.argv[1] == "-home":
