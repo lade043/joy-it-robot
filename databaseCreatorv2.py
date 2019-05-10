@@ -63,6 +63,44 @@ class Robot:
         def is_inside(self, x, y):
             return self.xmin <= x <= self.xmax and self.ymin <= y <= self.ymax
 
+    class Database:
+
+        class Entry:
+            def __init__(self, x, y, effi, s1, s2, s3):
+                self.x = x
+                self.y = y
+                self.effi = effi
+                self.s1 = s1
+                self.s2 = s2
+                self.s3 = s3
+
+            def pos_is_equal_to(self, other_entry):
+                return self.x == other_entry.x and self.y == other_entry.y
+
+            def other_efficency_better(self, other_entry):
+                return self.effi > other_entry.effi
+
+        def __init__(self):
+            self.database = []
+
+        def _is_contained(self, entry):
+            for existing_entry in self.database:
+                if existing_entry.pos_is_equal_to(entry):
+                    return existing_entry
+            return None
+
+        def get_entry(self, x, y):
+            wanted = self.Entry(x, y, 0, 0, 0, 0)
+            return self._is_contained(wanted)
+
+        def add_entry(self, entry):
+            contained = self._is_contained(entry)
+            if contained:
+                if contained.other_efficency_better(entry):
+                    self.database.append(entry)
+            else:
+                self.database.append(entry)
+
     def __init__(self, s1, s2, s3, coordinatessystem):
         self.servo1 = s1
         self.servo2 = s2
@@ -71,6 +109,7 @@ class Robot:
         self.arm1 = None
         self.arm2 = None
         self.arm3 = None
+        self.data = self.Database()
 
         # get position based on servos
         # get efficency based on servos
@@ -97,3 +136,4 @@ test = Robot(Robot.Servo(1, Robot.Servo.Geometry(0.55, 2.3, 1.4)),
 test.init_depending(Robot.Arm(test.servo1, 10.26, 0.84), Robot.Arm(test.servo2, 9.85), Robot.Arm(test.servo3, 12, 9),
                     None, [test.servo1], [test.servo1, test.servo2])
 print("finished")
+print("test")
