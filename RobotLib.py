@@ -22,6 +22,8 @@ class Robot:
                 self.delta = self.deg + previous_servos[-1].deg
                 if self.delta < 0:
                     self.delta *= -1
+            else:
+                self.delta = self.deg
             self.total_angle_rad = self._get_rad(self.total_angle_deg)
 
         def _get_rad(self, deg):
@@ -144,3 +146,7 @@ class Robot:
         for i, servo in enumerate([self.servo1, self.servo2, self.servo3]):
             effi += servo.delta * multipliers[i]
         return effi
+
+    def calculate(self):
+        self.x, self.y = self._get_position()
+        self.efficency = self._get_efficency()
