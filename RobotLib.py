@@ -102,20 +102,21 @@ class Robot:
             self.database = []
 
         def _is_contained(self, entry):
-            for existing_entry in self.database:
+            for i, existing_entry in enumerate(self.database):
                 if existing_entry.pos_is_equal_to(entry):
-                    return existing_entry
-            return None
+                    return existing_entry, i
+            return None, 0
 
         def get_entry(self, x, y):
             wanted = self.Entry(x, y, 0, 0, 0, 0)
-            return self._is_contained(wanted)
+            _return, i = self._is_contained(wanted)
+            return _return
 
         def add_entry(self, entry):
-            contained = self._is_contained(entry)
+            contained, i = self._is_contained(entry)
             if contained:
                 if contained.other_efficency_better(entry):
-                    self.database.append(entry)
+                    self.database[i] = entry
             else:
                 self.database.append(entry)
 
@@ -162,3 +163,14 @@ class Robot:
     def calculate(self):
         self.x, self.y = self._get_position()
         self.efficency = self._get_efficency()
+        self.x = self._round(self.x)
+        self.y = self._round(self.y)
+
+    def _round(self, number, n=None):
+        if not n:
+            n = 0
+        digits = number - math.floor(number)
+        if digits < 2:
+            return math.floor(number * 10 ** n) / 10 ** n
+        elif digits > 8:
+            return math.ceil(number * 10 ** n) / 10 ** n
