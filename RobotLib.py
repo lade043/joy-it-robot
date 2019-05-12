@@ -30,9 +30,21 @@ class Robot:
             rad = deg * math.pi / 180
             return rad
 
+        def _calc_previous(self):
+            if self.previous_servos:
+                for servo in self.previous_servos:
+                    self.total_angle_deg += servo.deg
+                self.delta = self.deg + self.previous_servos[-1].deg
+                if self.delta < 0:
+                    self.delta *= -1
+            else:
+                self.delta = self.deg
+            self.total_angle_rad = self._get_rad(self.total_angle_deg)
+
         def set_angle(self, angle):
             self.deg = angle
             self.rad = self._get_rad(self.deg)
+            self._calc_previous()
 
         def _get_angle(self, ms):
             val_min = self.geometry.min
