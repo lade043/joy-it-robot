@@ -88,9 +88,9 @@ class Robot:
                 self.x = x
                 self.y = y
                 self.effi = effi
-                self.s1 = s1
-                self.s2 = s2
-                self.s3 = s3
+                self.s1 = s1.deg
+                self.s2 = s2.deg
+                self.s3 = s3.deg
 
             def pos_is_equal_to(self, other_entry):
                 return self.x == other_entry.x and self.y == other_entry.y
@@ -119,6 +119,22 @@ class Robot:
                     self.database[i] = entry
             else:
                 self.database.append(entry)
+
+        def serialize(self):
+            string = ""
+            for entry in self.database:
+                string += "{},{}:{},{},{}\n".format(str(entry.x), str(entry.y), str(entry.s1.deg), str(entry.s2.deg),
+                                                    str(entry.s3.deg))
+            return string
+
+        def deserialize(self, string):
+            entries = string.split("\n")
+            for entry in entries:
+                coordinates = entry.split(":")[0]
+                servos = entry.split(":")[1]
+                new = self.Entry(float(coordinates[0]), float(coordinates[1]), float(servos[0]), float(servos[1]),
+                                 float(servos[2]))
+                self.database.append(new)
 
     def __init__(self, s1, s2, s3, coordinatessystem):
         self.servo1 = s1

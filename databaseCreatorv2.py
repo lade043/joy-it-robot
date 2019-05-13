@@ -1,5 +1,6 @@
-from RobotLib import *
 import numpy as npy
+
+from RobotLib import *
 
 
 class Looper:
@@ -21,6 +22,13 @@ class Looper:
                                                                         self.robot.servo3))
         print("A database with {} entries has been created.".format(len(self.robot.data.database)))
 
+    def export(self):
+        file = open("database.data", 'w')
+        file.write(self.robot.data.serialize())
+        file.flush()
+        file.close()
+        print("Exported")
+
 
 test = Robot(Robot.Servo(1, Robot.Servo.Geometry(0.55, 2.3, 1.4)),
              Robot.Servo(2, Robot.Servo.Geometry(2.5, 0.55, 1.55)),
@@ -31,5 +39,6 @@ test.init_depending(Robot.Arm(test.servo1, 10.26, 0.84), Robot.Arm(test.servo2, 
 
 looper = Looper(test)
 looper.run()
+looper.export()
 print("finished")
 print("test")
