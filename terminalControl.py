@@ -4,9 +4,16 @@ import sys
 import math
 import time
 import csv
+from RobotLib import *
 
 pwm = Adafruit_PCA9685.PCA9685(address=0x41)
 
+joy_it = Robot(Robot.Servo(1, Robot.Servo.Geometry(0.55, 2.3, 1.4)),
+               Robot.Servo(2, Robot.Servo.Geometry(2.5, 0.55, 1.55)),
+               Robot.Servo(3, Robot.Servo.Geometry(0.7, 2.25, 2.25)),
+               Robot.CoordinateSystem([-100, 100], [-100, 100]))
+joy_it.init_depending(Robot.Arm(joy_it.servo1, 10.26, 0.84), Robot.Arm(joy_it.servo2, 9.85),
+                      Robot.Arm(joy_it.servo3, 12, 9), None, [joy_it.servo1], [joy_it.servo1, joy_it.servo2])
 
 # the values for all the servos (are different for each robot)
 geometry = {
