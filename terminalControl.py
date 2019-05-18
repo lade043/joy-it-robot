@@ -14,7 +14,7 @@ joy_it = Robot(Robot.Servo(1, Robot.Servo.Geometry(0.55, 2.3, 1.4)),
                Robot.Servo(3, Robot.Servo.Geometry(0.7, 2.25, 2.25)),
                Robot.CoordinateSystem([-100, 100], [-100, 100]))
 joy_it.init_depending(Robot.Arm(joy_it.servo1, 10.26, 0.84), Robot.Arm(joy_it.servo2, 9.85),
-                      Robot.Arm(joy_it.servo3, 12, 9), None, [joy_it.servo1], [joy_it.servo1, joy_it.servo2])
+                      Robot.Arm(joy_it.servo3, 12, -3), None, [joy_it.servo1], [joy_it.servo1, joy_it.servo2])
 
 # the values for all the servos (are different for each robot)
 servo0min = 0.5
@@ -24,6 +24,7 @@ servo4min = 0.5
 servo4max = 2.5
 servo4mid = 1.5
 servo0actual = 0
+
 
 class argvReader:
     def __init__(self, argv):
