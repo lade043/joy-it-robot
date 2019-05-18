@@ -81,7 +81,7 @@ class Robot:
                 self.mid = mid
 
             def is_inside(self, ms):
-                return self.min < ms < self.max or self.max < ms < self.min
+                return self.min <= ms <= self.max or self.max <= ms <= self.min
 
     class Arm:
         def __init__(self, attatched_to, length, height=0.0):
