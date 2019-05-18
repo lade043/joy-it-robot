@@ -122,6 +122,7 @@ class argvReader:
                     time.sleep(int(row[0].split(" ")[1]))
                 else:
                     for servo_int, pos in enumerate(row):
+                        pos = int(pos)
                         if servo_int == 1:
                             servo = joy_it.servo1
                         elif servo_int == 2:
