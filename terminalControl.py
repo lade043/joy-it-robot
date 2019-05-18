@@ -32,6 +32,10 @@ class argvReader:
         for i, servo in enumerate([joy_it.servo1, joy_it.servo2, joy_it.servo3]):
             servo.set_angle(0)
             set_servo_pulse(i+1, servo.get_ms(True))
+        ms = get_ms_servo0(0)
+        set_servo_pulse(0, ms)
+        ms = get_ms_servo4(0)
+        set_servo_pulse(4, ms)
 
     def servo(self):
         servo_int = int(self.argv[2])
