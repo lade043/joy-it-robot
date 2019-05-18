@@ -151,6 +151,7 @@ def get_ms_servo4(deg):
 
 
 def get_ms_servo0(deg):
+    print(deg)
     change = 1 / 90
     if servo0min > servo0max:
         change *= -1
