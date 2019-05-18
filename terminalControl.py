@@ -130,8 +130,6 @@ class argvReader:
                             if not servo.geometry.is_inside(ms):
                                 print("Position to big or to small")
                                 sys.exit()
-                            elif 0 < servo < 5:
-                                print("Servo is not on robotarm")
                             else:
                                 set_servo_pulse(servo_int, servo.ms)
                         elif servo_int == 4:

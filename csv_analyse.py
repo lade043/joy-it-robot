@@ -1,7 +1,7 @@
 import time
 import csv
 
-file = "/home/lars/Schreibtisch/sequence.csv"
+file = "sequence.csv"
 with open(file) as f:
     csv_reader = csv.reader(f, delimiter=',')
     for row in csv_reader:
@@ -9,8 +9,6 @@ with open(file) as f:
             print("sleep " + row[0].split(" ")[1])
             time.sleep(int(row[0].split(" ")[1]))
         else:
-            f = 0
-            for i in row:
+            for count, i in enumerate(row):
                 print(i)
-                print(str(f))
-                f += 1
+                print(count)
