@@ -48,6 +48,8 @@ class argvReader:
                 sys.exit()
             elif 0 < servo < 5:
                 print("Servo is not on robotarm")
+            elif servo_int == 0:
+                set_servo_pulse(0, pos)
             else:
                 servo.set_ms(pos)
                 set_servo_pulse(servo_int, servo.ms)
