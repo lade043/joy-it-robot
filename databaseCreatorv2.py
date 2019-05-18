@@ -5,7 +5,7 @@ from RobotLib import *
 
 class Looper:
     def __init__(self, Robot):
-        self.stepsize = 0.3
+        self.stepsize = 1
         self.robot = Robot
 
     def run(self):
