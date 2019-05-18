@@ -36,6 +36,8 @@ class argvReader:
     def servo(self):
         servo_int = int(self.argv[2])
         pos = float(self.argv[4])
+        print(servo_int)
+        print(pos)
         if servo_int == 1:
             servo = joy_it.servo1
         elif servo_int == 2:
