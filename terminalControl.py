@@ -2,6 +2,7 @@ from __future__ import division
 import Adafruit_PCA9685
 import sys
 import time
+import numpy as npy
 import csv
 from RobotLib import *
 
@@ -22,13 +23,21 @@ servo0mid = 1.85
 servo4min = 0.5
 servo4max = 2.5
 servo4mid = 1.5
-
+servo0actual = 0
 
 class argvReader:
     def __init__(self, argv):
         self.argv = argv
 
+    def output(self, s0_angle):
+        joy_it.calculate()
+        x = joy_it.x
+        z = joy_it.y
+        x, y = converter_2d_to3d(x, s0_angle)
+        print("{},{},{}".format(x, y, z))
+
     def home(self):
+        global servo0actual
         for i, servo in enumerate([joy_it.servo1, joy_it.servo2, joy_it.servo3]):
             servo.set_angle(0)
             set_servo_pulse(i+1, servo.get_ms(True))
@@ -36,8 +45,11 @@ class argvReader:
         set_servo_pulse(0, ms)
         ms = get_ms_servo4(0)
         set_servo_pulse(4, ms)
+        servo0actual = 0
+        self.output(0)
 
     def servo(self):
+        global servo0actual
         servo_int = int(self.argv[2])
         pos = float(self.argv[4])
         if servo_int == 1:
@@ -55,11 +67,14 @@ class argvReader:
                 set_servo_pulse(servo_int, servo.ms)
         elif servo_int <= 5:
             set_servo_pulse(servo_int, pos)
+            if servo_int == 0:
+                servo0actual = get_angle_servo0(pos)
         else:
             sys.exit()
-        print(str(servo_int) + ": " + str(pos))
+        self.output(servo0actual)
 
     def list(self):
+        global servo0actual
         commands = self.argv[2:]
         for entry in commands:
             servo_int = int(entry.split(',')[0])
@@ -79,11 +94,14 @@ class argvReader:
                     set_servo_pulse(servo_int, servo.ms)
             elif servo_int <= 5 or servo_int == 0:
                 set_servo_pulse(servo_int, pos)
+                if servo_int == 0:
+                    servo0actual = get_angle_servo0(pos)
             else:
                 sys.exit()
-            print(str(servo_int) + ": " + str(pos))
+            self.output(servo0actual)
 
     def angle(self):
+        global servo0actual
         commands = self.argv[2:]
         for entry in commands:
             servo_int = int(entry.split(',')[0])
@@ -108,8 +126,10 @@ class argvReader:
             elif servo_int == 0:
                 ms = get_ms_servo0(pos)
                 set_servo_pulse(servo_int, ms)
+                servo0actual = pos
             else:
                 sys.exit()
+        self.output(servo0actual)
 
     def csv(self):
         file = self.argv[2]
@@ -156,12 +176,27 @@ def get_ms_servo4(deg):
 
 
 def get_ms_servo0(deg):
-    print(deg)
     change = 1 / 90
     if servo0min > servo0max:
         change *= -1
     ms = (deg * change + servo0mid)
     return ms
+
+
+def get_angle_servo4(ms):
+    change = 1 / 90
+    if servo4min > servo4max:
+        change *= -1
+    angle = (ms - servo4mid) / change
+    return angle
+
+
+def get_angle_servo0(ms):
+    change = 1 / 90
+    if servo0min > servo0max:
+        change *= -1
+    angle = (ms - servo0mid) / change
+    return angle
 
 
 def set_servo_pulse(channel, pulse):
@@ -179,6 +214,13 @@ def set_servo_pulse(channel, pulse):
     pulse = round(pulse)
     pulse = int(pulse)
     pwm.set_pwm(channel, 0, pulse)
+
+
+def converter_2d_to3d(hypotenuse, s0_angle):
+    rad = s0_angle * math.pi / 180
+    x = npy.cos(rad) * hypotenuse
+    y = npy.sin(rad) * hypotenuse
+    return x, y
 
 
 def read_argv():
