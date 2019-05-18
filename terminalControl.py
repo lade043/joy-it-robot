@@ -35,6 +35,8 @@ class argvReader:
         z = joy_it.y
         x, y = converter_2d_to3d(x, s0_angle)
         print("{},{},{}".format(x, y, z))
+        print("servo0:{}, servo1:{}, servo2:{}, servo3:{}".format(servo0actual, joy_it.servo1.deg, joy_it.servo2.deg,
+                                                                  joy_it.servo3.deg))
 
     def home(self):
         global servo0actual
