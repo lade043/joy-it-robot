@@ -1,9 +1,12 @@
 from __future__ import division
-import Adafruit_PCA9685
+
+import csv
 import sys
 import time
+
+import Adafruit_PCA9685
 import numpy as npy
-import csv
+
 from RobotLib import *
 
 pwm = Adafruit_PCA9685.PCA9685(address=0x41)
@@ -32,11 +35,10 @@ class argvReader:
 
     def output(self, s0_angle):
         joy_it.calculate()
-        print(joy_it.x)
         x = joy_it.x
         z = joy_it.y
         x, y = converter_2d_to3d(x, s0_angle)
-        print("{},{},{}".format(x, y, z))
+        print("x:{},y:{},z:{}".format(x, y, z))
         print("servo0:{}, servo1:{}, servo2:{}, servo3:{}".format(servo0actual, joy_it.servo1.deg, joy_it.servo2.deg,
                                                                   joy_it.servo3.deg))
 
