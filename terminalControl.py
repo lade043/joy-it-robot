@@ -36,22 +36,16 @@ class argvReader:
     def servo(self):
         servo_int = int(self.argv[2])
         pos = float(self.argv[4])
-        print(servo_int)
-        print(pos)
         if servo_int == 1:
             servo = joy_it.servo1
         elif servo_int == 2:
             servo = joy_it.servo2
         elif servo_int == 3:
             servo = joy_it.servo3
-        if servo_int <= 3:
+        if 0 < servo_int <= 3:
             if not servo.geometry.is_inside(pos):
                 print("Position to big or to small")
                 sys.exit()
-            elif 0 < servo < 5:
-                print("Servo is not on robotarm")
-            elif servo_int == 0:
-                set_servo_pulse(0, pos)
             else:
                 servo.set_ms(pos)
                 set_servo_pulse(servo_int, servo.ms)
