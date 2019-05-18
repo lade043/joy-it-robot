@@ -98,7 +98,7 @@ class argvReader:
                     servo0actual = get_angle_servo0(pos)
             else:
                 sys.exit()
-            self.output(servo0actual)
+        self.output(servo0actual)
 
     def angle(self):
         global servo0actual
