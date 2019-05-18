@@ -31,6 +31,7 @@ class argvReader:
 
     def output(self, s0_angle):
         joy_it.calculate()
+        print(joy_it.x)
         x = joy_it.x
         z = joy_it.y
         x, y = converter_2d_to3d(x, s0_angle)
