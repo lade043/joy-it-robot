@@ -105,3 +105,6 @@ venv.bak/
 
 # tests for fast debugging
 tests/
+
+# last position of robot thru terminalControl
+.robotpos.file
