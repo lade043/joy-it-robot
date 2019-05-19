@@ -42,7 +42,8 @@ class Robot:
             else:
                 self.delta = self.deg
                 self.total_angle_deg = self.deg
-            self.total_angle_rad = self._get_rad(self.total_angle_deg)
+                if self.delta < 0:
+                    self.delta *= -1
 
         def set_angle(self, angle):
             self.deg = angle
@@ -143,8 +144,8 @@ class Robot:
         def serialize(self):
             string = ""
             for entry in self.database:
-                string += "{},{}:{},{},{}\n".format(str(entry.x), str(entry.y), str(entry.s1.deg), str(entry.s2.deg),
-                                                    str(entry.s3.deg))
+                string += "{},{}:{},{},{}\n".format(str(entry.x), str(entry.y), str(entry.s1), str(entry.s2),
+                                                    str(entry.s3))
             return string
 
         def deserialize(self, string):
