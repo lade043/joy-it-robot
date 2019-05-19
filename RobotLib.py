@@ -3,7 +3,7 @@ import math
 
 class Robot:
     class Servo:
-        def __init__(self, angle, geometry, previous_servos=None):
+        def __init__(self, angle, geometry):
             self.deg = angle
             self.rad = self._get_rad(self.deg)
             self.geometry = geometry
@@ -12,6 +12,7 @@ class Robot:
             self.total_angle_deg = None
             self.total_angle_rad = None
             self.delta = None
+            self.ms = None
 
         def add_previous_servos(self, previous_servos=None):
             self.previous_servos = previous_servos
@@ -32,6 +33,7 @@ class Robot:
 
         def _calc_previous(self):
             if self.previous_servos:
+                self.total_angle_deg = 0
                 for servo in self.previous_servos:
                     self.total_angle_deg += servo.deg
                 self.delta = self.deg + self.previous_servos[-1].deg
@@ -39,9 +41,9 @@ class Robot:
                     self.delta *= -1
             else:
                 self.delta = self.deg
+                self.total_angle_deg = self.deg
                 if self.delta < 0:
                     self.delta *= -1
-            self.total_angle_rad = self._get_rad(self.total_angle_deg)
 
         def set_angle(self, angle):
             self.deg = angle
@@ -61,11 +63,28 @@ class Robot:
         def _get_max_min(self):
             return self._get_angle(self.geometry.max), self._get_angle(self.geometry.min)
 
+        def set_ms(self, ms):
+            self.ms = ms
+            self.deg = self._get_angle(self.ms)
+            self.rad = self._get_rad(self.deg)
+            self._calc_previous()
+
+        def get_ms(self, calc=False):
+            if calc:
+                change = 1 / 90
+                if self.geometry.min > self.geometry.max:
+                    change *= -1
+                self.ms = (self.deg * change + self.geometry.mid)
+            return self.ms
+
         class Geometry:
             def __init__(self, _max, _min, mid):
                 self.max = _max
                 self.min = _min
                 self.mid = mid
+
+            def is_inside(self, ms):
+                return self.min <= ms <= self.max or self.max <= ms <= self.min
 
     class Arm:
         def __init__(self, attatched_to, length, height=0.0):
