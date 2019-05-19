@@ -181,6 +181,7 @@ class argvReader:
         :return:sets all the servos to the angles from the csv file
         """
         csv_file = self.argv[2]
+        global servo0actual
 
         with open(csv_file) as f:
             csv_reader = csv.reader(f, delimiter=',')
@@ -211,8 +212,10 @@ class argvReader:
                         elif servo_int == 0:
                             ms = get_ms_servo0(pos)
                             set_servo_pulse(servo_int, ms)
+                            servo0actual = pos
                         else:
                             sys.exit()
+                    argv_reader.output(servo0actual)
 
     def serialize(self, filepath):
         """
