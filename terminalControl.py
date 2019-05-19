@@ -254,6 +254,7 @@ def read_argv():
     elif sys.argv[1] == "-loop":
         while True:
             _input = input(">").split(" ")
+            _input.insert(0, "loop")
             argv_reader.set_argument(_input)
             if _input[1] == "-home":
                 argv_reader.home()
