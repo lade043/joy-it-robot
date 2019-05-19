@@ -187,7 +187,7 @@ class argvReader:
         try:
             with open(filepath, 'r') as file:
                 string = file.readline()
-                string.split(",")
+                string = string.split(",")
                 servo0actual = int(string[0])
                 joy_it.servo1.set_angle(int(string[1]))
                 joy_it.servo2.set_angle(int(string[2]))
