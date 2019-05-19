@@ -33,6 +33,9 @@ class argvReader:
     def __init__(self, argv):
         self.argv = argv
 
+    def set_argument(self, argv):
+        self.argv = argv
+
     def output(self, s0_angle):
         joy_it.calculate()
         x = joy_it.x
@@ -248,6 +251,20 @@ def read_argv():
         argv_reader.angle()
     elif sys.argv[1] == "-csv":
         argv_reader.csv()
+    elif sys.argv[1] == "-loop":
+        while True:
+            _input = input(">").split(" ")
+            argv_reader.set_argument(_input)
+            if _input[1] == "-home":
+                argv_reader.home()
+            elif _input[1] == "-servo":
+                argv_reader.servo()
+            elif _input[1] == "-list":  # -list 0,1.5 2,2 3,1.75
+                argv_reader.list()
+            elif _input[1] == "-angle":
+                argv_reader.angle()
+            elif _input[1] == "-csv":
+                argv_reader.csv()
 
 
 argv_reader = argvReader(sys.argv)
