@@ -184,13 +184,19 @@ class argvReader:
 
     def deserialize(self, filepath):
         global servo0actual
-        with open(filepath, 'r') as file:
-            string = file.readline()
-            string.split(",")
-            servo0actual = int(string[0])
-            joy_it.servo1.set_angle(int(string[1]))
-            joy_it.servo2.set_angle(int(string[2]))
-            joy_it.servo3.set_angle(int(string[3]))
+        try:
+            with open(filepath, 'r') as file:
+                string = file.readline()
+                string.split(",")
+                servo0actual = int(string[0])
+                joy_it.servo1.set_angle(int(string[1]))
+                joy_it.servo2.set_angle(int(string[2]))
+                joy_it.servo3.set_angle(int(string[3]))
+        except FileNotFoundError:
+            servo0actual = 0
+            joy_it.servo1.set_angle(0)
+            joy_it.servo2.set_angle(0)
+            joy_it.servo3.set_angle(0)
 
 
 def get_ms_servo4(deg):
