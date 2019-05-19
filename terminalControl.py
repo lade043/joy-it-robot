@@ -188,10 +188,10 @@ class argvReader:
             with open(filepath, 'r') as file:
                 string = file.readline()
                 string = string.split(",")
-                servo0actual = int(string[0])
-                joy_it.servo1.set_angle(int(string[1]))
-                joy_it.servo2.set_angle(int(string[2]))
-                joy_it.servo3.set_angle(int(string[3]))
+                servo0actual = float(string[0])
+                joy_it.servo1.set_angle(float(string[1]))
+                joy_it.servo2.set_angle(float(string[2]))
+                joy_it.servo3.set_angle(float(string[3]))
         except FileNotFoundError:
             servo0actual = 0
             joy_it.servo1.set_angle(0)
