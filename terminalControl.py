@@ -223,9 +223,9 @@ class argvReader:
         :param filepath: filepath of the file to which the position should be written to
         :return: The angles of servo0 to servo3 seperated by a ','
         """
-        with open(filepath, 'w') as file:
+        with open(filepath, 'w') as _file:
             string = "{},{},{},{}".format(servo0actual, joy_it.servo1.deg, joy_it.servo2.deg, joy_it.servo3.deg)
-            file.write(string)
+            _file.write(string)
 
     def deserialize(self, filepath):
         """
@@ -235,8 +235,8 @@ class argvReader:
         """
         global servo0actual
         try:
-            with open(filepath, 'r') as file:
-                string = file.readline()
+            with open(filepath, 'r') as _file:
+                string = _file.readline()
                 string = string.split(",")
                 servo0actual = float(string[0])
                 joy_it.servo1.set_angle(float(string[1]))

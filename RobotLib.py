@@ -129,7 +129,9 @@ class Robot:
             return None, 0
 
         def get_entry(self, x, y):
-            wanted = self.Entry(x, y, 0, 0, 0, 0)
+            wanted = self.Entry(x, y, 0, Robot.Servo(0, Robot.Servo.Geometry(0, 0, 0)),
+                                Robot.Servo(0, Robot.Servo.Geometry(0, 0, 0)),
+                                Robot.Servo(0, Robot.Servo.Geometry(0, 0, 0)))
             _return, i = self._is_contained(wanted)
             return _return
 
@@ -153,7 +155,7 @@ class Robot:
             for entry in entries:
                 coordinates = entry.split(":")[0]
                 servos = entry.split(":")[1]
-                new = self.Entry(float(coordinates[0]), float(coordinates[1]), float(servos[0]), float(servos[1]),
+                new = self.Entry(float(coordinates[0]), float(coordinates[1]), -1, float(servos[0]), float(servos[1]),
                                  float(servos[2]))
                 self.database.append(new)
 

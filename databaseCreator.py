@@ -1,24 +1,23 @@
 import math
 import csv
 
-
 geometry = {
-        "servo0min": 0.5,
-        "servo0max": 2.5,
-        "servo0mid": 1.85,
-        "servo1min": 2.3,
-        "servo1max": 0.55,
-        "servo1mid": 1.4,
-        "servo2min": 0.55,
-        "servo2max": 2.5,
-        "servo2mid": 1.55,
-        "servo3min": 2.25,
-        "servo3max": 0.7,
-        "servo3mid": 2.25,
-        "servo4min": 0.5,
-        "servo4max": 2.5,
-        "servo4mid": 1.5
-    }
+    "servo0min": 0.5,
+    "servo0max": 2.5,
+    "servo0mid": 1.85,
+    "servo1min": 2.3,
+    "servo1max": 0.55,
+    "servo1mid": 1.4,
+    "servo2min": 0.55,
+    "servo2max": 2.5,
+    "servo2mid": 1.55,
+    "servo3min": 2.25,
+    "servo3max": 0.7,
+    "servo3mid": 2.25,
+    "servo4min": 0.5,
+    "servo4max": 2.5,
+    "servo4mid": 1.5
+}
 arms = {
     0: 0.84,
     1: 10.26,
@@ -83,7 +82,7 @@ def get_ms(servo, angle):
     val_min = geometry[minimum]
     val_max = geometry[maximum]
     val_mid = geometry[middle]
-    change = 1/90
+    change = 1 / 90
     if val_min > val_max:
         change *= -1
     ms = (angle * change + val_mid)
@@ -132,12 +131,12 @@ if eff < replace
 """
 db = {}
 for steps in range(1, 0, -0.2):
-        for servo1 in range(pos[1][0], pos[1][1], steps):
-            for servo2 in range(pos[2][0], pos[2][1], steps):
-                for servo3 in range(pos[3][0], pos[3][1], steps):
-                    for servo4 in range(pos[4][0], pos[4][1], steps):
-                        coordinate = []
-                        coordinate.append(get_pos([servo1, servo2, servo3, servo4]))
-                        #coordinate.append(get_efficency([servo0, servo1, servo2, servo3, servo4]))
-                        if coordinate in db:
-                            if db[coordinate][]
+    for servo1 in range(pos[1][0], pos[1][1], steps):
+        for servo2 in range(pos[2][0], pos[2][1], steps):
+            for servo3 in range(pos[3][0], pos[3][1], steps):
+                for servo4 in range(pos[4][0], pos[4][1], steps):
+                    coordinate = []
+                    coordinate.append(get_pos([servo1, servo2, servo3, servo4]))
+                    # coordinate.append(get_efficency([servo0, servo1, servo2, servo3, servo4]))
+                    if coordinate in db:
+                        if db[coordinate][]
