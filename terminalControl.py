@@ -12,6 +12,8 @@ from RobotLib import *
 pwm = Adafruit_PCA9685.PCA9685(address=0x41)
 pwm.set_pwm_freq(50)
 
+file = ".robotpos.file"
+
 joy_it = Robot(Robot.Servo(1, Robot.Servo.Geometry(0.55, 2.3, 1.4)),
                Robot.Servo(2, Robot.Servo.Geometry(2.5, 0.55, 1.55)),
                Robot.Servo(3, Robot.Servo.Geometry(0.7, 2.25, 2.25)),
@@ -175,6 +177,21 @@ class argvReader:
                         else:
                             sys.exit()
 
+    def serialize(self, filepath):
+        with open(filepath, 'w') as file:
+            string = "{},{},{},{}".format(servo0actual, joy_it.servo1.deg, joy_it.servo2.deg, joy_it.servo3.deg)
+            file.write(string)
+
+    def deserialize(self, filepath):
+        global servo0actual
+        with open(filepath, 'r') as file:
+            string = file.readline()
+            string.split(",")
+            servo0actual = int(string[0])
+            joy_it.servo1.set_angle(int(string[1]))
+            joy_it.servo2.set_angle(int(string[2]))
+            joy_it.servo3.set_angle(int(string[3]))
+
 
 def get_ms_servo4(deg):
     change = 1 / 90
@@ -266,8 +283,11 @@ def read_argv():
                 argv_reader.angle()
             elif _input[1] == "-csv":
                 argv_reader.csv()
+            elif _input[1] == "-exit":
+                break
 
 
 argv_reader = argvReader(sys.argv)
+argv_reader.deserialize(file)
 read_argv()
-
+argv_reader.serialize(file)
