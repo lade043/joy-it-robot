@@ -9,11 +9,14 @@ import numpy as npy
 
 from RobotLib import *
 
+# setting up the Servo Controller
 pwm = Adafruit_PCA9685.PCA9685(address=0x41)
 pwm.set_pwm_freq(50)
 
+# file with latest given servo pos
 file = ".robotpos.file"
 
+# defining robot model of joy_it
 joy_it = Robot(Robot.Servo(1, Robot.Servo.Geometry(0.55, 2.3, 1.4)),
                Robot.Servo(2, Robot.Servo.Geometry(2.5, 0.55, 1.55)),
                Robot.Servo(3, Robot.Servo.Geometry(0.7, 2.25, 2.25)),
@@ -33,12 +36,26 @@ servo0actual = 0
 
 class argvReader:
     def __init__(self, argv):
+        """
+        Takes the values from a list of arguments and controls the servos accordingly
+        :param argv: The arguments, that should be analyzed
+        """
         self.argv = argv
 
     def set_argument(self, argv):
+        """
+        sets the argument if it change since the init
+        :param argv: The arguments, that should be analyzed
+        :return:
+        """
         self.argv = argv
 
     def output(self, s0_angle):
+        """
+        Calculates the position of the claw and outputs it with the angles of the servos
+        :param s0_angle: Angle of servo 0 for conversion from 2d to 3d
+        :return: Console output
+        """
         joy_it.calculate()
         x = joy_it.x
         z = joy_it.y
@@ -48,6 +65,10 @@ class argvReader:
                                                                   joy_it.servo3.deg))
 
     def home(self):
+        """
+        Controls all servos to correspond the home position
+        :return: sets all servos to 0deg
+        """
         global servo0actual
         for i, servo in enumerate([joy_it.servo1, joy_it.servo2, joy_it.servo3]):
             servo.set_angle(0)
@@ -60,6 +81,10 @@ class argvReader:
         self.output(0)
 
     def servo(self):
+        """
+        Controls one servo to according to the given ms value
+        :return: sets one servo to the angle that correspond the ms value
+        """
         global servo0actual
         servo_int = int(self.argv[2])
         pos = float(self.argv[4])
@@ -85,6 +110,10 @@ class argvReader:
         self.output(servo0actual)
 
     def list(self):
+        """
+        Controls multiple servos according to their given ms values
+        :return: sets multiple servos to their ms values
+        """
         global servo0actual
         commands = self.argv[2:]
         for entry in commands:
@@ -112,6 +141,10 @@ class argvReader:
         self.output(servo0actual)
 
     def angle(self):
+        """
+        Controls multiple servos according to their given angle
+        :return: sets multiple servos to the angle that is given
+        """
         global servo0actual
         commands = self.argv[2:]
         for entry in commands:
@@ -143,9 +176,13 @@ class argvReader:
         self.output(servo0actual)
 
     def csv(self):
-        file = self.argv[2]
+        """
+        Follows an procedure given by an csv file
+        :return:sets all the servos to the angles from the csv file
+        """
+        csv_file = self.argv[2]
 
-        with open(file) as f:
+        with open(csv_file) as f:
             csv_reader = csv.reader(f, delimiter=',')
             for row in csv_reader:
                 if "delay" in row[0]:
@@ -178,11 +215,21 @@ class argvReader:
                             sys.exit()
 
     def serialize(self, filepath):
+        """
+        Prints the current position to an file
+        :param filepath: filepath of the file to which the position should be written to
+        :return: The angles of servo0 to servo3 seperated by a ','
+        """
         with open(filepath, 'w') as file:
             string = "{},{},{},{}".format(servo0actual, joy_it.servo1.deg, joy_it.servo2.deg, joy_it.servo3.deg)
             file.write(string)
 
     def deserialize(self, filepath):
+        """
+        Sets all position variables to the values from the file
+        :param filepath: filepath of the file from which should be read
+        :return: The variables are set accordingly
+        """
         global servo0actual
         try:
             with open(filepath, 'r') as file:
@@ -199,15 +246,12 @@ class argvReader:
             joy_it.servo3.set_angle(0)
 
 
-def get_ms_servo4(deg):
-    change = 1 / 90
-    if servo4min > servo4max:
-        change *= -1
-    ms = (deg * change + servo4mid)
-    return ms
-
-
 def get_ms_servo0(deg):
+    """
+    Calculates the ms value for servo 0 at a given angle
+    :param deg: Angle in deg
+    :return: ms value which corresponds to the angle
+    """
     change = 1 / 90
     if servo0min > servo0max:
         change *= -1
@@ -215,19 +259,42 @@ def get_ms_servo0(deg):
     return ms
 
 
-def get_angle_servo4(ms):
-    change = 1 / 90
-    if servo4min > servo4max:
-        change *= -1
-    angle = (ms - servo4mid) / change
-    return angle
-
-
 def get_angle_servo0(ms):
+    """
+    Calculates the angle for servo0 at a given ms-value
+    :param ms: ms value
+    :return: angle which corresponds to the ms value
+    """
     change = 1 / 90
     if servo0min > servo0max:
         change *= -1
     angle = (ms - servo0mid) / change
+    return angle
+
+
+def get_ms_servo4(deg):
+    """
+    see 'get_ms_servo0'
+    :param deg:
+    :return:
+    """
+    change = 1 / 90
+    if servo4min > servo4max:
+        change *= -1
+    ms = (deg * change + servo4mid)
+    return ms
+
+
+def get_angle_servo4(ms):
+    """
+    see 'get_angle_servo0'
+    :param ms:
+    :return:
+    """
+    change = 1 / 90
+    if servo4min > servo4max:
+        change *= -1
+    angle = (ms - servo4mid) / change
     return angle
 
 
@@ -249,6 +316,12 @@ def set_servo_pulse(channel, pulse):
 
 
 def converter_2d_to3d(hypotenuse, s0_angle):
+    """
+    Converts the 2d model to an 3d model by using the angle of s0
+    :param hypotenuse: The distance from the base to the claw in x direction
+    :param s0_angle: Angle in deg of servo0
+    :return: The calculated x and y coordinates
+    """
     rad = s0_angle * math.pi / 180
     x = npy.cos(rad) * hypotenuse
     y = npy.sin(rad) * hypotenuse
@@ -262,6 +335,9 @@ def read_argv():
                                 python3 terminalControl.py -list servo,pos(ms) servo,pos(ms)
                                 python3 terminalControl.py -angle servo,angle servo,angle
                                 python3 terminalControl.py -csv file
+                                python3 terminalControl.py -loop
+                                > -servo x -pos y(ms)
+                                > ...
     :return:
     """
     if sys.argv[1] == "-home":
