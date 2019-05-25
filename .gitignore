@@ -108,3 +108,6 @@ tests/
 
 # last position of robot thru terminalControl
 .robotpos.file
+
+# temp data for databaseCreator so it can be run from the last point
+database.temp

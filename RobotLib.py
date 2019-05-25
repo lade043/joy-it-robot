@@ -154,11 +154,14 @@ class Robot:
         def deserialize(self, string):
             entries = string.split("\n")
             for entry in entries:
-                coordinates = entry.split(":")[0]
-                servos = entry.split(":")[1]
-                new = self.Entry(float(coordinates[0]), float(coordinates[1]), -1, float(servos[0]), float(servos[1]),
-                                 float(servos[2]))
-                self.database.append(new)
+                if entry:
+                    coordinates = entry.split(":")[0].split(',')
+                    servos = entry.split(":")[1].split(',')
+                    new = self.Entry(float(coordinates[0]), float(coordinates[1]), -1,
+                                     Robot.Servo(float(servos[0]), Robot.Servo.Geometry(0, 0, 0)),
+                                     Robot.Servo(float(servos[1]), Robot.Servo.Geometry(0, 0, 0)),
+                                     Robot.Servo(float(servos[2]), Robot.Servo.Geometry(0, 0, 0)))
+                    self.database.append(new)
 
     def __init__(self, s1, s2, s3, coordinatessystem):
         self.servo1 = s1
