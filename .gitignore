@@ -111,3 +111,6 @@ tests/
 
 # temp data for databaseCreator so it can be run from the last point
 database.temp
+
+# Jupyter notebooks for testing
+*.ipynb
