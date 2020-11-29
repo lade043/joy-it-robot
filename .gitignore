@@ -114,3 +114,11 @@ database.temp
 
 # Jupyter notebooks for testing
 *.ipynb
+
+# Files created for own documentation purposes, not ready for public
+Roboter.aux
+Roboter.log
+Roboter.pdf
+Roboter.synctex.gz
+Roboter.tex
+Roboter.toc
